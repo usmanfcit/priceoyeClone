@@ -3,7 +3,7 @@ import sys
 
 
 def main():
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "priceoyeClone.settings")
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "priceoyeclone.settings")
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:

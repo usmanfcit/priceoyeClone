@@ -3,7 +3,7 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = config('SECRET_KEY', default='default-secret-key')
+SECRET_KEY = config("SECRET_KEY")
 
 DEBUG = True
 
@@ -16,6 +16,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "priceoye_clone_app"
 ]
 
 MIDDLEWARE = [
@@ -46,7 +47,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "priceoyeClone.wsgi.application"
+WSGI_APPLICATION = "priceoyeclone.wsgi.application"
 
 DATABASES = {
     "default": {
@@ -83,3 +84,10 @@ USE_TZ = True
 STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+AUTH_USER_MODEL = "priceoye_clone_app.CustomUser"
+
+AUTHENTICATION_BACKENDS = (
+    "django.contrib.auth.backends.ModelBackend",
+)
+
