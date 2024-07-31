@@ -1,13 +1,13 @@
 from django import forms
-from .models import CustomUser
+from .models import User
 
 
 class RegistrationForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
 
     class Meta:
-        model = CustomUser
-        fields = ["name", "email", "phone", "password"]
+        model = User
+        fields = ["first_name", "last_name", "email", "phone", "password"]
 
 
 class LoginForm(forms.Form):

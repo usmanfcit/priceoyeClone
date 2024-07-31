@@ -16,7 +16,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "priceoye_clone_app"
+    "Users"
 ]
 
 MIDDLEWARE = [
@@ -85,7 +85,7 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-AUTH_USER_MODEL = "priceoye_clone_app.CustomUser"
+AUTH_USER_MODEL = "Users.User"
 
 AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
