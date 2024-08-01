@@ -1,6 +1,10 @@
-{% extends "user_base.html" %}
-
+{% extends "base.html" %}
+{% load static %}
 {% block title %}Login{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="{% static 'css/login.css' %}" />
+{% endblock %}
 
 {% block content %}
 <h2>Login</h2>
