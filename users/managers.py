@@ -10,7 +10,7 @@ class UserManager(BaseUserManager):
         if not email:
             raise ValueError(_("The Email field must be set"))
         email = self.normalize_email(email)
-        role = extra_fields.pop('role', None)
+        role = extra_fields.pop("role", None)
         user = self.model(email=email, role=role, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
@@ -28,6 +28,6 @@ class UserManager(BaseUserManager):
         if extra_fields.get("is_superuser") is not True:
             raise ValueError(_("Superuser must have is_superuser=True."))
 
-        Role = apps.get_model('users', 'Role')
-        role = Role.objects.get(id=2)
+        Role = apps.get_model("users", "Role")
+        role, created = Role.objects.get_or_create(name=Role.RoleChoices.ADMIN)
         return self._create_user(email, password, role=role, **extra_fields)

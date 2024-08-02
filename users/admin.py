@@ -1,28 +1,25 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth.admin import UserAdmin as DefaultUserAdmin
 
-from .forms import CustomUserCreationForm, CustomUserChangeForm
 from .models import User, Role
 
 
-class UserAdmin(BaseUserAdmin):
-    add_form = CustomUserCreationForm
-    form = CustomUserChangeForm
+class UserAdmin(DefaultUserAdmin):
     model = User
-    list_display = ['email']
+    list_display = ["email"]
     fieldsets = (
-        (None, {'fields': ('email', 'password')}),
-        ('Personal info', {'fields': ('first_name', 'last_name', 'phone', 'role')}),
-        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser')}),
-        ('Important dates', {'fields': ('last_login',)}),
+        (None, {"fields": ("email", "password")}),
+        ("Personal info", {"fields": ("first_name", "last_name", "phone_number", "role")}),
+        ("Permissions", {"fields": ("is_active", "is_staff", "is_superuser", "groups", "user_permissions")}),
+        ("Important dates", {"fields": ("last_login",)}),
     )
     add_fieldsets = (
         (None, {
-            'classes': ('wide',),
-            'fields': ('email', 'first_name', 'last_name', 'phone', 'role', 'password1', 'password2'),
+            "classes": ("wide",),
+            "fields": ("email", "first_name", "last_name", "phone_number", "role", "password1", "password2"),
         }),
     )
-    ordering = ('email',)
+    ordering = ("email",)
 
 
 admin.site.register(User, UserAdmin)

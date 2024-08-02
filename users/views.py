@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
+from django.apps import apps
 
 from .forms import LoginForm, RegistrationForm
 
@@ -11,6 +12,8 @@ def register(request):
         if form.is_valid():
             user = form.save(commit=False)
             user.set_password(form.cleaned_data.get('password'))
+            Role = apps.get_model("users", "Role")
+            user.role, created = Role.objects.get_or_create(name=Role.RoleChoices.CUSTOMER)
             form.save()
             messages.success(request, "Registration successful.")
             return redirect("login")
