@@ -4,6 +4,7 @@ from django.contrib.auth.admin import UserAdmin as DefaultUserAdmin
 from .models import User, Role
 
 
+@admin.register(User)
 class UserAdmin(DefaultUserAdmin):
     model = User
     list_display = ["email"]
@@ -22,5 +23,4 @@ class UserAdmin(DefaultUserAdmin):
     ordering = ("email",)
 
 
-admin.site.register(User, UserAdmin)
 admin.site.register(Role)

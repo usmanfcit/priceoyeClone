@@ -2,6 +2,8 @@ from django.contrib.auth.models import BaseUserManager
 from django.utils.translation import gettext_lazy as _
 from django.apps import apps
 
+from .choices import RoleChoices
+
 
 class UserManager(BaseUserManager):
     use_in_migrations = True
@@ -29,5 +31,5 @@ class UserManager(BaseUserManager):
             raise ValueError(_("Superuser must have is_superuser=True."))
 
         Role = apps.get_model("users", "Role")
-        role, created = Role.objects.get_or_create(name=Role.RoleChoices.ADMIN)
+        role, created = Role.objects.get_or_create(name=RoleChoices.ADMIN)
         return self._create_user(email, password, role=role, **extra_fields)

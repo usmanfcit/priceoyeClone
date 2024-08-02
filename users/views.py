@@ -1,9 +1,9 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
-from django.apps import apps
 
 from .forms import LoginForm, RegistrationForm
+from .models import RoleChoices,Role, User
 
 
 def register(request):
@@ -12,8 +12,7 @@ def register(request):
         if form.is_valid():
             user = form.save(commit=False)
             user.set_password(form.cleaned_data.get('password'))
-            Role = apps.get_model("users", "Role")
-            user.role, created = Role.objects.get_or_create(name=Role.RoleChoices.CUSTOMER)
+            user.role, created = Role.objects.get_or_create(name=RoleChoices.CUSTOMER)
             form.save()
             messages.success(request, "Registration successful.")
             return redirect("login")
@@ -30,12 +29,21 @@ def login_view(request):
         if form.is_valid():
             email = form.cleaned_data.get("email")
             password = form.cleaned_data.get("password")
+
+            try:
+                user = User.objects.get(email=email)
+            except User.DoesNotExist:
+                form.add_error(None, "No account found with this email.")
+                return render(request, "login.html", {"form": form})
+
             user = authenticate(request, email=email, password=password)
+
             if user is not None:
                 login(request, user)
                 messages.success(request, "Login successful!")
             else:
-                form.add_error(None, "Invalid email or password")
+                form.add_error(None, "Invalid email or password.")
     else:
         form = LoginForm()
+
     return render(request, "login.html", {"form": form})

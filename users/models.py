@@ -1,18 +1,13 @@
 from django.db import models
-from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import (
     AbstractBaseUser,
     PermissionsMixin
 )
 from .managers import UserManager
+from .choices import RoleChoices
 
 
 class Role(models.Model):
-    class RoleChoices(models.TextChoices):
-        CUSTOMER = "customer", _("Customer")
-        STAFF = "staff", _("Staff")
-        ADMIN = "admin", _("Admin")
-
     name = models.CharField(
         max_length=20,
         choices=RoleChoices.choices,
@@ -29,7 +24,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(max_length=50, blank=True, null=True)
     email = models.EmailField(unique=True)
     phone_number = models.CharField(max_length=50, blank=True, null=True)
-    role = models.ForeignKey(Role, on_delete=models.CASCADE, null=True)
+    role = models.ForeignKey(Role, on_delete=models.SET_NULL, null=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(auto_now_add=True)
