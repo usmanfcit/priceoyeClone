@@ -3,7 +3,19 @@
 {% block title %}{{ categories.category_name }}{% endblock %}
 
 {% block content %}
-
+<form method="get" id="vendor-filter-form">
+    <div>
+        <h3>Filter by Vendor</h3>
+        {% for vendor in vendors %}
+            <label>
+                <input type="checkbox" name="vendor" value="{{ vendor.id }}"
+                       {% if vendor.id|stringformat:"s" in selected_vendors %}checked{% endif %}>
+                {{ vendor.name }}
+            </label>
+        {% endfor %}
+    </div>
+    <button type="submit">Apply Filter</button>
+</form>
 <div class="product-grid">
     {% for product in page_object %}
         <div class="product-item">

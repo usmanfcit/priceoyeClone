@@ -52,7 +52,7 @@ def login_view(request):
 
 
 @login_required
-def my_account(request):
+def profile(request):
     if request.method == "POST":
         form = AccountUpdateForm(request.POST, instance=request.user)
         if form.is_valid():
