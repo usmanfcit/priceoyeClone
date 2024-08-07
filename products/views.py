@@ -2,7 +2,19 @@ from django.core.paginator import Paginator
 from django.db.models.functions import Lower
 from django.shortcuts import render
 
-from .models import Product, Category, Vendor
+from .models import Product, Category, Vendor, SpecificationCategory
+
+
+def product_details(request, product_id, category_name):
+    selected_product = Product.objects.get(id=product_id)
+    product_specifications = selected_product.specifications.all()
+    specification_categories = SpecificationCategory.objects.filter(details__product=selected_product).distinct()
+
+    return render(request, "product_details.html", {
+        "product_specifications": product_specifications,
+        "selected_product": selected_product,
+        "spec_categories": specification_categories
+    })
 
 
 def homepage(request):

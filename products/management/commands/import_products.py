@@ -5,7 +5,6 @@ from products.models import (
     Vendor,
     SpecificationCategory,
     SpecificationDetail,
-    SpecificationHeader,
     Product
 )
 
@@ -40,16 +39,14 @@ class Command(BaseCommand):
             for category_name, specs in product_data["specifications"].items():
                 spec_category, _ = SpecificationCategory.objects.get_or_create(name=category_name)
 
-                for header_name, value in specs.items():
-                    spec_header, _ = SpecificationHeader.objects.get_or_create(
-                        name=header_name,
-                        category=spec_category
-                    )
+                for label_name, value in specs.items():
 
                     SpecificationDetail.objects.update_or_create(
-                        header=spec_header,
+                        specification_label=label_name,
+                        specification_category=spec_category,
+                        specification_value=value,
                         product=product,
-                        defaults={"value": value}
+                        defaults={"specification_value": value}
                     )
 
         self.stdout.write(self.style.SUCCESS("Successfully imported products"))

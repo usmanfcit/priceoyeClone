@@ -1,0 +1,24 @@
+{% extends 'home_base.html' %}
+
+{% block title %}{{ selected_product.name }}{% endblock %}
+
+{% block content %}
+
+<div class="product-item">
+    <img src="{{ selected_product.image_url }}" alt="{{ selected_product.name }}">
+    <h3>{{ selected_product.name }}</h3>
+    <p>Rs {{ selected_product.price }}</p>
+</div>
+
+{% for category in spec_categories %}
+    <div class="product-specs">
+        <h3>{{ category }}</h3>
+        {% for spec_details in product_specifications %}
+            {% if spec_details.specification_category == category %}
+                <p>{{ spec_details.specification_label }}:{{ spec_details.specification_value }}</p>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endfor %}
+
+{% endblock %}
