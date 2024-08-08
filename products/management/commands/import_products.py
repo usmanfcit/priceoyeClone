@@ -5,6 +5,7 @@ from products.models import (
     Vendor,
     SpecificationCategory,
     SpecificationDetail,
+    ProductSpecificationGroup,
     Product
 )
 
@@ -28,7 +29,7 @@ class Command(BaseCommand):
             category, _ = Category.objects.get_or_create(name=category_name)
             vendor, _ = Vendor.objects.get_or_create(name=vendor_name)
 
-            product = Product.objects.create(
+            product, _ = Product.objects.get_or_create(
                 name=product_data["product_title"],
                 price=product_data["price"].replace(",", ""),
                 image_url=product_data["image_url"],
@@ -38,14 +39,16 @@ class Command(BaseCommand):
 
             for category_name, specs in product_data["specifications"].items():
                 spec_category, _ = SpecificationCategory.objects.get_or_create(name=category_name)
-
+                spec_group, _ = ProductSpecificationGroup.objects.get_or_create(
+                    product=product,
+                    specification_category=spec_category
+                )
                 for label_name, value in specs.items():
 
                     SpecificationDetail.objects.update_or_create(
+                        specification_group=spec_group,
                         specification_label=label_name,
-                        specification_category=spec_category,
                         specification_value=value,
-                        product=product,
                         defaults={"specification_value": value}
                     )
 

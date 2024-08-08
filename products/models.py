@@ -29,11 +29,26 @@ class SpecificationCategory(models.Model):
         return self.name
 
 
+class ProductSpecificationGroup(models.Model):
+    product = models.ForeignKey(
+        "Product",
+        on_delete=models.CASCADE,
+        related_name="specification_groups"
+    )
+    specification_category = models.ForeignKey(
+        SpecificationCategory,
+        on_delete=models.CASCADE,
+        related_name="product_groups"
+    )
+
+    def __str__(self):
+        return f"{self.product.name} - {self.specification_category.name}"
+
+
 class SpecificationDetail(models.Model):
-    specification_category = models.ForeignKey(SpecificationCategory, on_delete=models.CASCADE, related_name="details")
+    specification_group = models.ForeignKey(ProductSpecificationGroup, on_delete=models.CASCADE, related_name="details")
     specification_label = models.CharField(max_length=100)
     specification_value = models.TextField()
-    product = models.ForeignKey("Product", on_delete=models.CASCADE, related_name="specifications")
 
     def __str__(self):
         return f"{self.specification_label}: {self.specification_value}"

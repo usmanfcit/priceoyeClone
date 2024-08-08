@@ -58,11 +58,11 @@ def profile(request):
         if form.is_valid():
             form.save()
             messages.success(request, "Your account has been updated successfully.")
-            return redirect("my_account")
+            return redirect("profile")
     else:
         form = AccountUpdateForm(instance=request.user)
 
-    return render(request, "my_account.html", {"form": form})
+    return render(request, "profile.html", {"form": form})
 
 
 @login_required

@@ -1,19 +1,19 @@
+from django.http import Http404
+from django.shortcuts import render
 from django.core.paginator import Paginator
 from django.db.models.functions import Lower
-from django.shortcuts import render
+from django_extensions.db.models import ActivatorModel
 
-from .models import Product, Category, Vendor, SpecificationCategory
+from .models import Product, Category, Vendor, SpecificationCategory, ProductSpecificationGroup
 
 
-def product_details(request, product_id, category_name):
-    selected_product = Product.objects.get(id=product_id)
-    product_specifications = selected_product.specifications.all()
-    specification_categories = SpecificationCategory.objects.filter(details__product=selected_product).distinct()
+def product_detail(request, product_id, category_name):
+    selected_product = Product.objects.get(id=product_id, status=ActivatorModel.ACTIVE_STATUS)
+    spec_groups = ProductSpecificationGroup.objects.filter(product=selected_product)
 
-    return render(request, "product_details.html", {
-        "product_specifications": product_specifications,
+    return render(request, "product_detail.html", {
         "selected_product": selected_product,
-        "spec_categories": specification_categories
+        "spec_groups": spec_groups,
     })
 
 
@@ -28,8 +28,12 @@ def homepage(request):
     return render(request, "homepage.html", {"page_object": page_object, "categories": categories})
 
 
-def category_product_page(request, category_name):
-    selected_category = Category.objects.get(name=category_name)
+def product_listing_by_category(request, category_name):
+    try:
+        selected_category = Category.objects.get(name=category_name)
+    except Category.DoesNotExist:
+        raise Http404("Category not found")
+
     category_products = Product.objects.filter(category=selected_category)
 
     selected_vendors = request.GET.getlist("vendor")

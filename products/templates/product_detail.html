@@ -8,15 +8,17 @@
     <img src="{{ selected_product.image_url }}" alt="{{ selected_product.name }}">
     <h3>{{ selected_product.name }}</h3>
     <p>Rs {{ selected_product.price }}</p>
+    <div class="product-item">
+{#        <a href="{% url "add_to_order" product.id %}">#}
+        <p>ADD TO CART</p>
+    </div>
 </div>
 
-{% for category in spec_categories %}
+{% for group in spec_groups %}
     <div class="product-specs">
-        <h3>{{ category }}</h3>
-        {% for spec_details in product_specifications %}
-            {% if spec_details.specification_category == category %}
-                <p>{{ spec_details.specification_label }}:{{ spec_details.specification_value }}</p>
-            {% endif %}
+        <h3>{{ group.specification_category }}</h3>
+        {% for spec_details in group.details.all %}
+            <p>{{ spec_details }}</p>
         {% endfor %}
     </div>
 {% endfor %}

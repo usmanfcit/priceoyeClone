@@ -1,7 +1,13 @@
 from django.contrib import admin
 
 from .forms import ProductForm
-from .models import Product, Vendor, Category, SpecificationCategory, SpecificationDetail
+from .models import (Product,
+                     Vendor,
+                     Category,
+                     SpecificationCategory,
+                     SpecificationDetail,
+                     ProductSpecificationGroup
+                     )
 
 
 @admin.register(Category)
@@ -27,9 +33,13 @@ class SpecificationDetailInline(admin.TabularInline):
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     form = ProductForm
-    readonly_fields = ["created", "modified"]
-    inlines = [SpecificationDetailInline]
+    readonly_fields = ["created", "modified", "specification_groups"]
 
 
-admin.site.register(SpecificationDetail)
+@admin.register(SpecificationDetail)
+class SpecificationDetailAdmin(admin.ModelAdmin):
+    readonly_fields = ["specification_group"]
+
+
 admin.site.register(SpecificationCategory)
+admin.site.register(ProductSpecificationGroup)

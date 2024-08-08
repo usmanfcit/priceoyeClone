@@ -19,7 +19,7 @@
 <div class="product-grid">
     {% for product in page_object %}
         <div class="product-item">
-            <a href="{% url "product_details" product.category product.id %}">
+            <a href="{% url "product_detail" product.category product.id %}">
             <img src="{{ product.image_url }}" alt="{{ product.name }}">
             <h3>{{ product.name }}</h3>
             <p>Rs {{ product.price }}</p>
