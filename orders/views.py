@@ -31,7 +31,7 @@ def add_to_cart(request, product_id):
 
 def delete_product_from_cart(request, product_id):
     item_to_delete = OrderItem.objects.get(product_id=product_id)
-    order = Order.objects.get()
+    order = Order.objects.get(user=request.user)
     order.total_price = order.total_price - item_to_delete.price
     order.save()
     item_to_delete.delete()
