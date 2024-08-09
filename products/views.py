@@ -4,7 +4,7 @@ from django.core.paginator import Paginator
 from django.db.models.functions import Lower
 from django_extensions.db.models import ActivatorModel
 
-from .models import Product, Category, Vendor, SpecificationCategory, ProductSpecificationGroup
+from .models import Product, Category, Vendor, ProductSpecificationGroup
 
 
 def product_detail(request, product_id, category_name):
@@ -34,13 +34,12 @@ def product_listing_by_category(request, category_name):
     except Category.DoesNotExist:
         raise Http404("Category not found")
 
-    category_products = Product.objects.filter(category=selected_category)
-
     selected_vendors = request.GET.getlist("vendor")
     if selected_vendors:
-        vendor_filtered_products = category_products.filter(vendor__id__in=selected_vendors)
+        vendor_filtered_products = Product.objects.filter(category=selected_category, vendor__id__in=selected_vendors)
         paginator = Paginator(vendor_filtered_products, 12)
     else:
+        category_products = Product.objects.filter(category=selected_category)
         paginator = Paginator(category_products, 12)
 
     page_number = request.GET.get("page")
