@@ -16,7 +16,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "users"
+    "users",
+    "products",
+    "django_extensions",
 ]
 
 MIDDLEWARE = [
@@ -91,6 +93,4 @@ AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
 )
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
