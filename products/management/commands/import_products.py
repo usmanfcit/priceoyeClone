@@ -5,7 +5,7 @@ from products.models import (
     Vendor,
     SpecificationCategory,
     SpecificationDetail,
-    ProductSpecificationGroup,
+    ProductSpecificationCategory,
     Product
 )
 
@@ -39,14 +39,14 @@ class Command(BaseCommand):
 
             for category_name, specs in product_data["specifications"].items():
                 spec_category, _ = SpecificationCategory.objects.get_or_create(name=category_name)
-                spec_group, _ = ProductSpecificationGroup.objects.get_or_create(
+                product_spec_category, _ = ProductSpecificationCategory.objects.get_or_create(
                     product=product,
                     specification_category=spec_category
                 )
                 for label_name, value in specs.items():
 
                     SpecificationDetail.objects.update_or_create(
-                        specification_group=spec_group,
+                        specification_category=product_spec_category,
                         specification_label=label_name,
                         specification_value=value,
                         defaults={"specification_value": value}

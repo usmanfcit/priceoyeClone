@@ -22,15 +22,15 @@
             <a href="{% url "product_detail" product.category product.id %}">
             <img src="{{ product.image_url }}" alt="{{ product.name }}">
             <h3>{{ product.name }}</h3>
-            <p>Rs {{ product.price }}</p>
+                <p>Rs {{ product.price }}</p></a>
         </div>
     {% endfor %}
 </div>
 <div class="pagination">
     <span class="step-links">
         {% if page_object.has_previous %}
-            <a href="?page=1&{% if request.GET.vendor %}vendor={{ request.GET.vendor }}{% endif %}">&laquo; first</a>
-            <a href="?page={{ page_object.previous_page_number }}&{% if request.GET.vendor %}vendor={{ request.GET.vendor }}{% endif %}">previous</a>
+            <a href="?page=1{% for vendor in selected_vendors %}&vendor={{ vendor }}{% endfor %}">&laquo; first</a>
+            <a href="?page={{ page_object.previous_page_number }}{% for vendor in selected_vendors %}&vendor={{ vendor }}{% endfor %}">Previous</a>
         {% endif %}
 
         <span class="current">
@@ -38,8 +38,8 @@
         </span>
 
         {% if page_object.has_next %}
-            <a href="?page={{ page_object.next_page_number }}&{% if request.GET.vendor %}vendor={{ request.GET.vendor }}{% endif %}">next</a>
-            <a href="?page={{ page_object.paginator.num_pages }}&{% if request.GET.vendor %}vendor={{ request.GET.vendor }}{% endif %}">last &raquo;</a>
+            <a href="?page={{ page_object.next_page_number }}{% for vendor in selected_vendors %}&vendor={{ vendor }}{% endfor %}">next</a>
+            <a href="?page={{ page_object.paginator.num_pages }}{% for vendor in selected_vendors %}&vendor={{ vendor }}{% endfor %}">last &raquo;</a>
         {% endif %}
     </span>
 </div>

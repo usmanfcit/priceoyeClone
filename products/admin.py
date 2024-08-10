@@ -6,7 +6,7 @@ from .models import (Product,
                      Category,
                      SpecificationCategory,
                      SpecificationDetail,
-                     ProductSpecificationGroup
+                     ProductSpecificationCategory
                      )
 
 
@@ -33,13 +33,12 @@ class SpecificationDetailInline(admin.TabularInline):
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     form = ProductForm
-    readonly_fields = ["created", "modified", "specification_groups"]
 
 
 @admin.register(SpecificationDetail)
 class SpecificationDetailAdmin(admin.ModelAdmin):
-    readonly_fields = ["specification_group"]
+    readonly_fields = ["specification_category"]
 
 
 admin.site.register(SpecificationCategory)
-admin.site.register(ProductSpecificationGroup)
+admin.site.register(ProductSpecificationCategory)

@@ -1,6 +1,8 @@
 from django.db import models
 from django_extensions.db.models import TimeStampedModel, ActivatorModel
 
+from .managers import ProductManager, CategoryManager, VendorManager
+
 
 class Category(TimeStampedModel, ActivatorModel):
     name = models.CharField(max_length=40, unique=True)
@@ -8,12 +10,16 @@ class Category(TimeStampedModel, ActivatorModel):
     class Meta:
         verbose_name_plural = "Categories"
 
+    objects = CategoryManager()
+
     def __str__(self):
         return self.name
 
 
 class Vendor(TimeStampedModel, ActivatorModel):
     name = models.CharField(max_length=40, unique=True)
+
+    objects = VendorManager()
 
     def __str__(self):
         return self.name
@@ -29,24 +35,30 @@ class SpecificationCategory(models.Model):
         return self.name
 
 
-class ProductSpecificationGroup(models.Model):
+class ProductSpecificationCategory(models.Model):
     product = models.ForeignKey(
         "Product",
         on_delete=models.CASCADE,
-        related_name="specification_groups"
+        related_name="specification_categories"
     )
     specification_category = models.ForeignKey(
         SpecificationCategory,
         on_delete=models.CASCADE,
-        related_name="product_groups"
+        related_name="product"
     )
+
+    class Meta:
+        verbose_name_plural = "Product Specification Categories"
 
     def __str__(self):
         return f"{self.product.name} - {self.specification_category.name}"
 
 
 class SpecificationDetail(models.Model):
-    specification_group = models.ForeignKey(ProductSpecificationGroup, on_delete=models.CASCADE, related_name="details")
+    specification_category = models.ForeignKey(
+        ProductSpecificationCategory,
+        on_delete=models.CASCADE,
+        related_name="details")
     specification_label = models.CharField(max_length=100)
     specification_value = models.TextField()
 
@@ -63,6 +75,8 @@ class Product(TimeStampedModel, ActivatorModel):
         on_delete=models.SET_NULL,
         null=True)
     vendor = models.ForeignKey(Vendor, on_delete=models.SET_NULL, null=True)
+
+    objects = ProductManager()
 
     def __str__(self):
         return self.name

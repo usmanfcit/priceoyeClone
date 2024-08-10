@@ -1,15 +1,14 @@
-from django.http import Http404
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
 from django.db.models.functions import Lower
 from django_extensions.db.models import ActivatorModel
 
-from .models import Product, Category, Vendor, ProductSpecificationGroup
+from .models import Product, Category, Vendor, ProductSpecificationCategory
 
 
 def product_detail(request, product_id, category_name):
-    selected_product = Product.objects.get(id=product_id, status=ActivatorModel.ACTIVE_STATUS)
-    spec_groups = ProductSpecificationGroup.objects.filter(product=selected_product)
+    selected_product = get_object_or_404(Product, id=product_id, status=ActivatorModel.ACTIVE_STATUS)
+    spec_groups = ProductSpecificationCategory.objects.filter(product=selected_product)
 
     return render(request, "product_detail.html", {
         "selected_product": selected_product,
@@ -29,18 +28,15 @@ def homepage(request):
 
 
 def product_listing_by_category(request, category_name):
-    try:
-        selected_category = Category.objects.get(name=category_name)
-    except Category.DoesNotExist:
-        raise Http404("Category not found")
-
+    selected_category = get_object_or_404(Category, name=category_name)
     selected_vendors = request.GET.getlist("vendor")
+
     if selected_vendors:
-        vendor_filtered_products = Product.objects.filter(category=selected_category, vendor__id__in=selected_vendors)
-        paginator = Paginator(vendor_filtered_products, 12)
+        products = Product.objects.filter(category=selected_category, vendor__id__in=selected_vendors)
+        paginator = Paginator(products, 12)
     else:
-        category_products = Product.objects.filter(category=selected_category)
-        paginator = Paginator(category_products, 12)
+        products = Product.objects.filter(category=selected_category)
+        paginator = Paginator(products, 12)
 
     page_number = request.GET.get("page")
     paginated_products_object = paginator.get_page(page_number)
