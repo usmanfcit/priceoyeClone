@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Homepage{% endblock %}</title>
+    <link rel="stylesheet" href="{% static "css/homepage.css" %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="navbar">
+        <div class="left">
+            <div class="dropdown">
+                <span>Categories</span>
+                <div class="dropdown-content">
+                    {% for category in categories %}
+                        <a href="{% url "category_products" category.name %}">{{ category.name }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="right">
+            <div class="dropdown">
+                <span>My Profile</span>
+                <div class="dropdown-content">
+                    <a href="{% url "profile" %}">My Profile</a>
+                    <form id="logout-form" action="{% url "logout" %}" method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit">Logout</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% block content %}
+    {% endblock %}
+
+    <script>
+        $(document).ready(function(){
+            $(".dropdown").hover(function() {
+                $(this).find(".dropdown-content").stop(true, true).slideDown("fast");
+            }, function() {
+                $(this).find(".dropdown-content").stop(true, true).slideUp("fast");
+            });
+        });
+    </script>
+</body>
+</html>

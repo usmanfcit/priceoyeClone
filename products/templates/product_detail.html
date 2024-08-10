@@ -1,0 +1,22 @@
+{% extends 'home_base.html' %}
+
+{% block title %}{{ selected_product.name }}{% endblock %}
+
+{% block content %}
+
+<div class="product-item">
+    <img src="{{ selected_product.image_url }}" alt="{{ selected_product.name }}">
+    <h3>{{ selected_product.name }}</h3>
+    <p>Rs {{ selected_product.price }}</p>
+</div>
+
+{% for group in spec_groups %}
+    <div class="product-specs">
+        <h3>{{ group.specification_category }}</h3>
+        {% for spec_details in group.details.all %}
+            <p>{{ spec_details }}</p>
+        {% endfor %}
+    </div>
+{% endfor %}
+
+{% endblock %}

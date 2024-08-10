@@ -1,0 +1,46 @@
+{% extends 'home_base.html' %}
+
+{% block title %}{{ categories.name }}{% endblock %}
+
+{% block content %}
+<form method="get" id="vendor-filter-form">
+    <div>
+        <h3>Filter by Vendor</h3>
+        {% for vendor in vendors %}
+            <label>
+                <input type="checkbox" name="vendor" value="{{ vendor.id }}"
+                       {% if vendor.id|stringformat:"s" in selected_vendors %}checked{% endif %}>
+                {{ vendor.name }}
+            </label>
+        {% endfor %}
+    </div>
+    <button type="submit">Apply Filter</button>
+</form>
+<div class="product-grid">
+    {% for product in page_object %}
+        <div class="product-item">
+            <a href="{% url "product_detail" product.category product.id %}">
+            <img src="{{ product.image_url }}" alt="{{ product.name }}">
+            <h3>{{ product.name }}</h3>
+                <p>Rs {{ product.price }}</p></a>
+        </div>
+    {% endfor %}
+</div>
+<div class="pagination">
+    <span class="step-links">
+        {% if page_object.has_previous %}
+            <a href="?page=1{% for vendor in selected_vendors %}&vendor={{ vendor }}{% endfor %}">&laquo; first</a>
+            <a href="?page={{ page_object.previous_page_number }}{% for vendor in selected_vendors %}&vendor={{ vendor }}{% endfor %}">Previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_object.number }} of {{ page_object.paginator.num_pages }}.
+        </span>
+
+        {% if page_object.has_next %}
+            <a href="?page={{ page_object.next_page_number }}{% for vendor in selected_vendors %}&vendor={{ vendor }}{% endfor %}">next</a>
+            <a href="?page={{ page_object.paginator.num_pages }}{% for vendor in selected_vendors %}&vendor={{ vendor }}{% endfor %}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+{% endblock %}

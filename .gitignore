@@ -2,3 +2,6 @@
 .idea
 __pycache__
 db.sqlite3
+*.json
+*.txt
+*.png
