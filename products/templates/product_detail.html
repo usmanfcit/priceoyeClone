@@ -1,4 +1,4 @@
-{% extends 'home_base.html' %}
+{% extends "home_base.html" %}
 
 {% block title %}{{ selected_product.name }}{% endblock %}
 
@@ -8,6 +8,9 @@
     <img src="{{ selected_product.image_url }}" alt="{{ selected_product.name }}">
     <h3>{{ selected_product.name }}</h3>
     <p>Rs {{ selected_product.price }}</p>
+    <div class="cart-url">
+        <a href="{% url "orders:add_to_cart" selected_product.id %}">ADD TO CART</a>
+    </div>
 </div>
 
 {% for group in spec_groups %}
