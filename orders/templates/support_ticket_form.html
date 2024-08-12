@@ -1,0 +1,23 @@
+{% extends "home_base.html" %}
+
+{% block title %}Cart{% endblock %}
+
+{% block content %}
+<div>
+    <form action="{% url "orders:create_support_ticket" order_id %}" method="post">
+        {% csrf_token %}
+        <div>
+            <label for="subject">Subject:</label>
+            <input type="text" id="subject" name="subject" maxlength="100" required>
+        </div>
+        <div>
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" required></textarea>
+        </div>
+        <div>
+            <button type="submit">Create Support Ticket</button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

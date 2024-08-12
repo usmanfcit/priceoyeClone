@@ -24,6 +24,8 @@
                 <span>My Profile</span>
                 <div class="dropdown-content">
                     <a href="{% url "profile" %}">My Profile</a>
+                    <a href="{% url "orders:show_cart" %}">Show Cart</a>
+                    <a href="{% url "orders:show_support_ticket" %}">Show tickets</a>
                     <form id="logout-form" action="{% url "logout" %}" method="post" style="display: inline;">
                         {% csrf_token %}
                         <button type="submit">Logout</button>
