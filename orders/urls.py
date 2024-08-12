@@ -8,5 +8,5 @@ urlpatterns = [
     path("create-support-ticket/<int:order_id>/", views.create_support_ticket, name="create_support_ticket"),
     path("show-cart/", views.show_cart, name="show_cart"),
     path("show-ticket-form/<int:order_id>/", views.show_ticket_form, name="show_ticket_form"),
-    path("show-support-ticket/", views.show_support_ticket, name="show_support_ticket"),
+    path("list-support-tickets/", views.list_support_tickets, name="list_support_tickets"),
 ]

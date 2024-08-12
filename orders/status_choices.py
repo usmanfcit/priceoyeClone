@@ -3,7 +3,7 @@ from django.db import models
 
 
 class OrderStatusChoices(models.TextChoices):
-    ORDER_RECEIVED = "order_received", _("Order_received")
+    ORDER_PLACED = "order_placed", _("Order_Placed")
     UNDER_PROCESSING = "under_processing", _("under_processing")
     DISPATCHED = "dispatched", _("Dispatched")
     DELIVERED = "delivered", _("Delivered")
