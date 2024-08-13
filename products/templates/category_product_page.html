@@ -17,7 +17,7 @@
     <button type="submit">Apply Filter</button>
 </form>
 <div class="product-grid">
-    {% for product in page_object %}
+    {% for product in page_obj %}
         <div class="product-item">
             <a href="{% url "product_detail" product.category product.id %}">
             <img src="{{ product.image_url }}" alt="{{ product.name }}">
@@ -28,18 +28,18 @@
 </div>
 <div class="pagination">
     <span class="step-links">
-        {% if page_object.has_previous %}
+        {% if page_obj.has_previous %}
             <a href="?page=1{% for vendor in selected_vendors %}&vendor={{ vendor }}{% endfor %}">&laquo; first</a>
-            <a href="?page={{ page_object.previous_page_number }}{% for vendor in selected_vendors %}&vendor={{ vendor }}{% endfor %}">Previous</a>
+            <a href="?page={{ page_obj.previous_page_number }}{% for vendor in selected_vendors %}&vendor={{ vendor }}{% endfor %}">Previous</a>
         {% endif %}
 
         <span class="current">
-            Page {{ page_object.number }} of {{ page_object.paginator.num_pages }}.
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
         </span>
 
-        {% if page_object.has_next %}
-            <a href="?page={{ page_object.next_page_number }}{% for vendor in selected_vendors %}&vendor={{ vendor }}{% endfor %}">next</a>
-            <a href="?page={{ page_object.paginator.num_pages }}{% for vendor in selected_vendors %}&vendor={{ vendor }}{% endfor %}">last &raquo;</a>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% for vendor in selected_vendors %}&vendor={{ vendor }}{% endfor %}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}{% for vendor in selected_vendors %}&vendor={{ vendor }}{% endfor %}">last &raquo;</a>
         {% endif %}
     </span>
 </div>

@@ -1,4 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.views.generic import DetailView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
+from django.views.generic.list import ListView
 
 from orders.models import Order, OrderItem, SupportTicket
 from products.models import Product
@@ -22,35 +26,61 @@ def add_to_cart(request, product_id):
     return redirect("orders:show_cart")
 
 
-def delete_product_from_cart(request, product_id):
-    item_to_delete = OrderItem.objects.get(product_id=product_id)
-    item_to_delete.delete()
-    return redirect("orders:show_cart")
+class DeleteProductFromCart(DeleteView):
+    model = OrderItem
+    template_name = "orderitem_confirm_delete.html"
+    success_url = reverse_lazy("orders:show_cart")
+
+    def get_object(self, queryset=None):
+        item_to_delete = OrderItem.objects.get(product_id=self.kwargs["product_id"])
+        return item_to_delete
 
 
-def show_cart(request):
-    order = Order.objects.get(user=request.user)
-    return render(request, "show_cart.html", {"order": order})
+class ShowCart(DetailView):
+    model = Order
+    template_name = "show_cart.html"
+    context_object_name = "order"
+
+    def get_object(self, queryset=None):
+        order = get_object_or_404(Order, user=self.request.user)
+        return order
 
 
-def show_ticket_form(request, order_id):
-    return render(request, "support_ticket_form.html", {"order_id": order_id})
+class ShowTicketForm(DetailView):
+    model = SupportTicket
+    template_name = "support_ticket_form.html"
+    context_object_name = "order_id"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["order_id"] = self.kwargs["order_id"]
+        return context
 
 
-def list_support_tickets(request):
-    support_tickets = SupportTicket.objects.filter(user=request.user)
-    return render(request, "list_support_tickets.html", {"support_tickets": support_tickets})
+class ListSupportTickets(ListView):
+    model = SupportTicket
+    template_name = "list_support_tickets.html"
+    context_object_name = "support_tickets"
+
+    def get_queryset(self):
+        support_tickets = SupportTicket.objects.filter(user=self.request.user)
+        return support_tickets
 
 
-def create_support_ticket(request, order_id):
-    user = request.user
-    order = get_object_or_404(Order, id=order_id, user=user)
+class CreateSupportTicket(CreateView):
+    model = SupportTicket
+    template_name = "support_ticket_form.html"
+    success_url = reverse_lazy("list_support_tickets")
 
-    subject = request.POST["subject"]
-    description = request.POST["description"]
+    def post(self, request, *args, **kwargs):
+        order_id = self.kwargs["order_id"]
+        user = request.user
+        order = get_object_or_404(Order, id=order_id, user=user)
+        subject = request.POST["subject"]
+        description = request.POST["description"]
 
-    support_ticket = SupportTicket.objects.get_or_create(user=user,
-                                                         order=order,
-                                                         title=subject,
-                                                         description=description)
-    return redirect("orders:list_support_tickets")
+        support_ticket = SupportTicket.objects.get_or_create(user=user,
+                                                             order=order,
+                                                             title=subject,
+                                                             description=description)
+        return redirect("orders:list_support_tickets")
