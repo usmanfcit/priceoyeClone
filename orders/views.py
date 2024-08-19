@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views.generic import DetailView
+from django.views.generic import DetailView, View
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.views.generic.list import ListView
@@ -8,22 +8,24 @@ from orders.models import Order, OrderItem, SupportTicket
 from products.models import Product
 
 
-def add_to_cart(request, product_id):
-    current_user = request.user
-    product = Product.objects.get(id=product_id)
-    order, created = Order.objects.get_or_create(
-        user=current_user,
-    )
-    order_item, created = OrderItem.objects.get_or_create(order=order, product=product)
+class AddToCart(View):
+    def get(self, request, *args, **kwargs):
+        current_user = request.user
+        product_id = self.kwargs["product_id"]
+        product = Product.objects.get(id=product_id)
+        order, created = Order.objects.get_or_create(
+            user=current_user,
+        )
+        order_item, created = OrderItem.objects.get_or_create(order=order, product=product)
 
-    if not created:
-        order_item.quantity += 1
-        order_item.price = product.price * order_item.quantity
-    else:
-        order_item.price = product.price
-    order_item.save()
+        if not created:
+            order_item.quantity += 1
+            order_item.price = product.price * order_item.quantity
+        else:
+            order_item.price = product.price
+        order_item.save()
 
-    return redirect("orders:show_cart")
+        return redirect("orders:show_cart")
 
 
 class DeleteProductFromCart(DeleteView):
@@ -47,13 +49,12 @@ class ShowCart(DetailView):
 
 
 class ShowTicketForm(DetailView):
-    model = SupportTicket
+    model = Order
     template_name = "support_ticket_form.html"
-    context_object_name = "order_id"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["order_id"] = self.kwargs["order_id"]
+        context["order_id"] = self.kwargs["pk"]
         return context
 
 
@@ -70,7 +71,6 @@ class ListSupportTickets(ListView):
 class CreateSupportTicket(CreateView):
     model = SupportTicket
     template_name = "support_ticket_form.html"
-    success_url = reverse_lazy("list_support_tickets")
 
     def post(self, request, *args, **kwargs):
         order_id = self.kwargs["order_id"]
@@ -79,8 +79,9 @@ class CreateSupportTicket(CreateView):
         subject = request.POST["subject"]
         description = request.POST["description"]
 
-        support_ticket = SupportTicket.objects.get_or_create(user=user,
-                                                             order=order,
-                                                             title=subject,
-                                                             description=description)
+        SupportTicket.objects.get_or_create(user=user,
+                                            order=order,
+                                            title=subject,
+                                            description=description)
+
         return redirect("orders:list_support_tickets")
