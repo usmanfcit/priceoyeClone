@@ -42,7 +42,6 @@ class LoginView(View):
                 user = User.objects.get(email=email)
             except User.DoesNotExist:
                 form.add_error(None, "No account found with this email.")
-                return render(self.request, "login.html", {"form": form})
             user = authenticate(self.request, email=email, password=password)
             if user is not None:
                 login(self.request, user)
@@ -50,6 +49,7 @@ class LoginView(View):
                 return redirect("homepage")
         else:
             form.add_error(None, "Invalid email or password.")
+        return render(self.request, "login.html", {"form": form})
 
 
 class ProfileView(LoginRequiredMixin, View):

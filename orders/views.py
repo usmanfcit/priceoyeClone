@@ -1,3 +1,4 @@
+from django.db.models import F
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import DetailView, View
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -16,14 +17,17 @@ class AddToCart(View):
         order, created = Order.objects.get_or_create(
             user=current_user,
         )
-        order_item, created = OrderItem.objects.get_or_create(order=order, product=product)
+        order_item, order_item_created = OrderItem.objects.get_or_create(order=order, product=product)
 
-        if not created:
-            order_item.quantity += 1
-            order_item.price = product.price * order_item.quantity
+        if not order_item_created:
+            OrderItem.objects.filter(order=order, product=product).update(
+                quantity=F("quantity") + 1,
+                price=F("price") + product.price
+            )
         else:
-            order_item.price = product.price
-        order_item.save()
+            OrderItem.objects.filter(order=order, product=product).update(
+                price=product.price
+            )
 
         return redirect("orders:show_cart")
 
@@ -32,10 +36,6 @@ class DeleteProductFromCart(DeleteView):
     model = OrderItem
     template_name = "orderitem_confirm_delete.html"
     success_url = reverse_lazy("orders:show_cart")
-
-    def get_object(self, queryset=None):
-        item_to_delete = OrderItem.objects.get(product_id=self.kwargs["product_id"])
-        return item_to_delete
 
 
 class ShowCart(DetailView):

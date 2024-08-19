@@ -12,14 +12,6 @@ class ProductDetailsView(DetailView):
     template_name = "product_detail.html"
     context_object_name = "selected_product"
 
-    def get_object(self, queryset=None):
-        selected_product = get_object_or_404(
-            Product,
-            id=self.kwargs["product_id"],
-            status=ActivatorModel.ACTIVE_STATUS
-        )
-        return selected_product
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["product_specification_categories"] = ProductSpecificationCategory.objects.filter(
