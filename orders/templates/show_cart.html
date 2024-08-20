@@ -22,5 +22,10 @@
 <div>
     <a href="{% url "orders:show_ticket_form" order.id %}">Make a Support Ticket</a>
 </div>
-
+<div>
+        <form method="post" action="{% url 'orders:finalize_order' order.id %}">
+            {% csrf_token %}
+            <button type="submit">Finalize Order</button>
+        </form>
+</div>
 {% endblock %}
