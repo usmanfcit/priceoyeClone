@@ -13,7 +13,7 @@ class Order(models.Model):
     order_status = models.CharField(
         max_length=20,
         choices=OrderStatusChoices.choices,
-        default=OrderStatusChoices.ORDER_PLACED
+        default=OrderStatusChoices.IN_CART
     )
 
     @property

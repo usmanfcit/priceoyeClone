@@ -1,0 +1,23 @@
+{% extends "home_base.html" %}
+
+{% block title %}Order{% endblock %}
+
+{% block content %}
+
+<div class="product-item">
+    {% for order in orders %}
+        <h3>Order # {{ order.id }}</h3>
+        {% for item in order.items.all %}
+            <h3>{{ item.product.name }}</h3>
+            <p>Rs {{ item.product.price }}</p>
+            <p>{{ item.quantity }}</p>
+            <p>Rs {{ item.price }}</p>
+        {% endfor %}
+    {% endfor %}
+</div>
+
+<div>
+    <h1>{{ orders.total_price }}</h1>
+</div>
+
+{% endblock %}

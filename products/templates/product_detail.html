@@ -13,10 +13,10 @@
     </div>
 </div>
 
-{% for group in spec_groups %}
+{% for product_specification_category in product_specification_categories %}
     <div class="product-specs">
-        <h3>{{ group.specification_category }}</h3>
-        {% for spec_details in group.details.all %}
+        <h3>{{ product_specification_category.specification_category }}</h3>
+        {% for spec_details in product_specification_category.details.all %}
             <p>{{ spec_details }}</p>
         {% endfor %}
     </div>
