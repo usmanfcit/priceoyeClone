@@ -1,5 +1,8 @@
+from datetime import timedelta
+
 from decouple import config
 from pathlib import Path
+import sentry_sdk
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -8,6 +11,19 @@ SECRET_KEY = config("SECRET_KEY")
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
+
+sentry_sdk.init(
+    dsn="https://3dc1a4af0514027fced17a53dfed4c14@o4507809417723904.ingest.de.sentry.io/4507809426899024",
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for tracing.
+    traces_sample_rate=1.0,
+    # Set profiles_sample_rate to 1.0 to profile 100%
+    # of sampled transactions.
+    # We recommend adjusting this value in production.
+    profiles_sample_rate=1.0,
+)
+
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -19,9 +35,28 @@ INSTALLED_APPS = [
     "users",
     "products",
     "orders",
+    "api",
     "debug_toolbar",
     "django_extensions",
+    "rest_framework",
+    "rest_framework_simplejwt"
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ]
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+    'SLIDING_TOKEN_LIFETIME': timedelta(days=30),
+    'SLIDING_TOKEN_REFRESH_LIFETIME_LATE_USER': timedelta(days=1),
+    'SLIDING_TOKEN_LIFETIME_LATE_USER': timedelta(days=30),
+}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
