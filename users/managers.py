@@ -33,3 +33,9 @@ class UserManager(BaseUserManager):
         Role = apps.get_model("users", "Role")
         role, created = Role.objects.get_or_create(name=RoleChoices.ADMIN)
         return self._create_user(email, password, role=role, **extra_fields)
+
+    def active(self):
+        return self.filter(is_active=True)
+
+    def inactive(self):
+        return self.filter(is_active=False)
