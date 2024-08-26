@@ -13,27 +13,22 @@ class UserRegistrationAPIView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
 
 
-class AuthenticateUserView(generics.GenericAPIView):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
-
-
-class UserListing(AuthenticateUserView, generics.ListAPIView):
+class UserListing(generics.ListAPIView):
     queryset = User.objects.active()
     serializer_class = UserSerializer
 
 
-class UserDetail(AuthenticateUserView, generics.RetrieveAPIView):
+class UserDetail(generics.RetrieveAPIView):
     queryset = User.objects.active()
     serializer_class = UserSerializer
 
 
-class UserUpdate(AuthenticateUserView, generics.UpdateAPIView):
+class UserUpdate(generics.UpdateAPIView):
     queryset = User.objects.active()
     serializer_class = UserSerializer
 
 
-class UserDelete(AuthenticateUserView, generics.DestroyAPIView):
+class UserDelete(generics.DestroyAPIView):
     queryset = User.objects.active()
     serializer_class = UserSerializer
 

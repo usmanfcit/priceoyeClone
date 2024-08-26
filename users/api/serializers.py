@@ -1,9 +1,9 @@
 from datetime import datetime, timezone
-from django.core.mail import send_mail
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from users.models import User, Role
+from .email import EmailService
 
 
 class RoleSerializer(serializers.ModelSerializer):
@@ -36,12 +36,13 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         data = super().validate(attrs)
         exp_timestamp = self.get_token(self.user)["exp"]
         exp_time = datetime.fromtimestamp(exp_timestamp, tz=timezone.utc)
-        now = datetime.now(tz=timezone.utc)
-        expires_in_minutes = (exp_time - now).total_seconds() / 60
-        data.update({
-            "expires_in_minutes": expires_in_minutes
-        })
-        return data
+        expiry_time = exp_time.isoformat()
+        user_data_serialized = UserSerializer(self.user)
+        user_data = user_data_serialized.data
+        user_data["exp"] = expiry_time
+        user_data['access'] = data["access"]
+        user_data['refresh'] = data["refresh"]
+        return user_data
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -50,19 +51,9 @@ class RegisterSerializer(serializers.ModelSerializer):
         fields = ("first_name", "last_name", "password", "email", "phone_number")
 
     def create(self, data):
-        user = User.objects.create(
-            phone_number=data["phone_number"],
-            email=data["email"],
-            first_name=data["first_name"],
-            last_name=data["last_name"]
-        )
+        user = super().create(data)
         user.set_password(data["password"])
         user.save()
-
-        subject = "Welcome to Our Website!"
-        plain_message = "Registered Successfully"
-        from_email = 'stcoleridge88@gmail.com'
-        to_email = user.email
-        send_mail(subject, plain_message, from_email, [to_email])
-
+        email_service = EmailService()
+        email_service.send_registration_email(user)
         return user
