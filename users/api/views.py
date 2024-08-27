@@ -8,12 +8,12 @@ from .serializers import (
     MyTokenObtainPairSerializer,
     RegisterSerializer,
     UserProductReactionSerializer,
-    UserProductReviewSerializer
+    ReviewSerializer
 )
 
 
 class UserProductReviewAPIView(generics.CreateAPIView):
-    serializer_class = UserProductReviewSerializer
+    serializer_class = ReviewSerializer
 
 
 class UserProductReactionAPIView(generics.CreateAPIView):
