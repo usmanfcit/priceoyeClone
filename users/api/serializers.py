@@ -61,10 +61,6 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
 
 
-class UserProductReactionSerializer(serializers.Serializer):
-    product_id = serializers.IntegerField()
-
-
 class UserProductReactionSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
@@ -84,12 +80,12 @@ class UserProductReactionSerializer(serializers.ModelSerializer):
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
-        fields = ("content_type", "object_id", "review", "rating")
+        fields = ("content_type", "object_id", "description", "rating")
 
     def create(self, data):
         object_id = data["object_id"]
         content_type_id = data["content_type"].id
-        review = data["review"]
+        description = data["description"]
         rating = data["rating"]
         user = self.context["request"].user
 
@@ -103,7 +99,7 @@ class ReviewSerializer(serializers.ModelSerializer):
             object_id=object_id,
             object_name=object_name,
             user=user,
-            review=review,
+            description=description,
             rating=rating
         )
         return review
