@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django_extensions.db.models import TimeStampedModel
 
 from products.models import Product
 from .status_choices import OrderStatusChoices, SupportTicketStatusChoices
@@ -7,9 +8,8 @@ from .status_choices import OrderStatusChoices, SupportTicketStatusChoices
 User = get_user_model()
 
 
-class Order(models.Model):
+class Order(TimeStampedModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
     order_status = models.CharField(
         max_length=20,
         choices=OrderStatusChoices.choices,
@@ -21,7 +21,7 @@ class Order(models.Model):
         return sum(item.price for item in self.items.all())
 
     def __str__(self):
-        return self.user.email
+        return f"{self.user} {self.order_status} {self.id}"
 
 
 class OrderItem(models.Model):
@@ -31,10 +31,10 @@ class OrderItem(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     def __str__(self):
-        return self.product.name
+        return self.product.name + " " + str(self.id)
 
 
-class SupportTicket(models.Model):
+class SupportTicket(TimeStampedModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
@@ -46,4 +46,4 @@ class SupportTicket(models.Model):
     )
 
     def __str__(self):
-        return self.title
+        return self.title + " " + str(self.id)
