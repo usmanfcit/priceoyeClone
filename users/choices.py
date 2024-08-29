@@ -6,3 +6,8 @@ class RoleChoices(models.TextChoices):
     CUSTOMER = "customer", _("Customer")
     STAFF = "staff", _("Staff")
     ADMIN = "admin", _("Admin")
+
+
+class ReactionChoices(models.TextChoices):
+    LIKE = "like", _("Like"),
+    DISLIKE = "dislike", _("Dislike")
