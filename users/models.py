@@ -6,11 +6,11 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
-from django_extensions.db.models import TimeStampedModel
+from django_extensions.db.models import TimeStampedModel, ActivatorModel
 
 from products.models import Product
 from .choices import RoleChoices, ReactionChoices
-from .managers import UserManager
+from .managers import UserManager, ReviewManager
 
 
 class Role(models.Model):
@@ -61,7 +61,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.email
 
 
-class Review(TimeStampedModel):
+class Review(TimeStampedModel, ActivatorModel):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey("content_type", "object_id")
@@ -74,6 +74,8 @@ class Review(TimeStampedModel):
             MaxValueValidator(10)
         ]
     )
+
+    objects = ReviewManager()
 
     def __str__(self):
         return f"{self.rating}  {self.user.email}  {self.object_name}"

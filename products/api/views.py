@@ -1,4 +1,4 @@
-from django.contrib.contenttypes.models import ContentType
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
 
@@ -6,6 +6,7 @@ from api.serializers import ProductSerializer
 from products.models import Product, Vendor
 from users.api.serializers import ReviewSerializer
 from users.models import Review
+from .filters import ProductFilter
 
 
 class ProductReviewListingAPIView(generics.ListAPIView):
@@ -13,8 +14,7 @@ class ProductReviewListingAPIView(generics.ListAPIView):
     serializer_class = ReviewSerializer
 
     def get_queryset(self):
-        product_content_type = ContentType.objects.get_for_model(Product)
-        return Review.objects.filter(content_type=product_content_type, object_id=self.kwargs["object_id"])
+        return Review.objects.get_active_reviews_for_model(Product, self.kwargs["object_id"])
 
 
 class VendorReviewListingAPIView(generics.ListAPIView):
@@ -22,13 +22,14 @@ class VendorReviewListingAPIView(generics.ListAPIView):
     serializer_class = ReviewSerializer
 
     def get_queryset(self):
-        vendor_content_type = ContentType.objects.get_for_model(Vendor)
-        return Review.objects.filter(content_type=vendor_content_type, object_id=self.kwargs["object_id"])
+        return Review.objects.get_active_reviews_for_model(Vendor, self.kwargs["object_id"])
 
 
 class VendorProductListingAPIView(generics.ListAPIView):
     permission_classes = (AllowAny,)
     serializer_class = ProductSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = ProductFilter
 
     def get_queryset(self):
-        return Product.objects.filter(vendor__name=self.kwargs["vendor_name"])
+        return Product.objects.active()

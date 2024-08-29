@@ -1,6 +1,9 @@
-from django.contrib.auth.models import BaseUserManager
-from django.utils.translation import gettext_lazy as _
 from django.apps import apps
+from django.contrib.auth.models import BaseUserManager
+from django.contrib.contenttypes.models import ContentType
+from django.db import models
+from django.utils.translation import gettext_lazy as _
+from django_extensions.db.models import ActivatorModel
 
 from .choices import RoleChoices
 
@@ -39,3 +42,15 @@ class UserManager(BaseUserManager):
 
     def inactive(self):
         return self.filter(is_active=False)
+
+
+class ReviewManager(models.Manager):
+    def active(self):
+        return self.filter(status=ActivatorModel.ACTIVE_STATUS)
+
+    def inactive(self):
+        return self.filter(status=ActivatorModel.INACTIVE_STATUS)
+
+    def get_active_reviews_for_model(self, model, object_id):
+        content_type = ContentType.objects.get_for_model(model)
+        return self.filter(content_type=content_type, object_id=object_id, status=ActivatorModel.ACTIVE_STATUS)
