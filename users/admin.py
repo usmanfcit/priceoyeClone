@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DefaultUserAdmin
 
-from .models import User, Role, UserProductReaction, Review
+from .models import User, Role, UserProductReaction, Review, UserProductReview
 
 
 @admin.register(User)
@@ -26,3 +26,4 @@ class UserAdmin(DefaultUserAdmin):
 admin.site.register(Role)
 admin.site.register(UserProductReaction)
 admin.site.register(Review)
+admin.site.register(UserProductReview)
