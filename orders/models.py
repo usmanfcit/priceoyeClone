@@ -11,6 +11,7 @@ User = get_user_model()
 
 class Order(TimeStampedModel, ActivatorModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
     order_status = models.CharField(
         max_length=20,
         choices=OrderStatusChoices.choices,
@@ -40,7 +41,7 @@ class OrderItem(TimeStampedModel):
         return self.product.name + " - " + str(self.id)
 
 
-class SupportTicket(models.Model):
+class SupportTicket(TimeStampedModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
@@ -52,4 +53,4 @@ class SupportTicket(models.Model):
     )
 
     def __str__(self):
-        return self.title
+        return self.title + " " + str(self.id)
