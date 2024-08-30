@@ -20,7 +20,7 @@ router.register(r'vendors', views.VendorViewSet)
 urlpatterns = [
                   path("admin/", admin.site.urls),
                   path("users/", include("users.urls")),
-                  path("api/user", include("users.api.urls")),
+                  path("api/", include("users.api.urls")),
                   path("api/order/", include("orders.api.urls")),
                   path("products/", include("products.urls")),
                   path("orders/", include("orders.urls", namespace='orders')),
