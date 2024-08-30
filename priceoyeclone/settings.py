@@ -35,7 +35,6 @@ INSTALLED_APPS = [
     "users",
     "products",
     "orders",
-    "api",
     "debug_toolbar",
     "django_extensions",
     "rest_framework",

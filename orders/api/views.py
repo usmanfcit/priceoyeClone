@@ -1,7 +1,8 @@
 from rest_framework import generics
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 
-from orders.api.serializers import OrderSerializer, OrderItemSerializer
-from orders.models import OrderItem, Order
+from orders.api.serializers import OrderSerializer, OrderItemSerializer, SupportTicketSerializer
+from orders.models import OrderItem, Order, SupportTicket
 from orders.status_choices import OrderStatusChoices
 from .permissions import IsOwner, IsOrderOwner
 
@@ -41,3 +42,18 @@ class OrderListingAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         return Order.objects.active().filter(user=self.request.user)
+
+
+class SupportTicketListCreateAPIView(ListCreateAPIView):
+    serializer_class = SupportTicketSerializer
+
+    def get_queryset(self):
+        return SupportTicket.objects.filter(user=self.request.user)
+
+
+class SupportTicketUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
+    serializer_class = SupportTicketSerializer
+
+    def get_queryset(self):
+        return SupportTicket.objects.filter(user=self.request.user)
+

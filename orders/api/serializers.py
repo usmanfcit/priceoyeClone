@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from orders.models import Order, OrderItem
+from orders.models import Order, OrderItem, SupportTicket
 from users.models import User
 
 
@@ -43,3 +43,11 @@ class OrderSerializer(serializers.ModelSerializer):
         if validated_data["user"] != self.context["request"].user:
             raise ValidationError({"user": "You are not allowed to set the user field manually."})
         return super().create(validated_data)
+
+
+class SupportTicketSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
+    class Meta:
+        model = SupportTicket
+        fields = '__all__'

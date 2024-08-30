@@ -2,11 +2,11 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
 
-from api.serializers import ProductSerializer
 from products.models import Product, Vendor
 from users.api.serializers import ReviewSerializer
 from users.models import Review
 from .filters import ProductFilter
+from .serializers import ProductSerializer
 
 
 class ProductReviewListingAPIView(generics.ListAPIView):

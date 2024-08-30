@@ -8,4 +8,6 @@ urlpatterns = [
     path("delete/<int:pk>/", views.OrderDeletionAPIView.as_view()),
     path("update/<int:pk>/", views.OrderUpdateAPIView.as_view()),
     path("list/", views.OrderListingAPIView.as_view()),
+    path("supportticket/list-or-create/", views.SupportTicketListCreateAPIView.as_view()),
+    path("supportticket/update-or-delete/<int:pk>/", views.SupportTicketUpdateDestroyAPIView.as_view()),
     ]
