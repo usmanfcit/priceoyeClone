@@ -11,8 +11,8 @@ from .models import RoleChoices, Role, User
 class RegisterView(View):
     def get(self, request):
         form = RegistrationForm()
-        context = {'form': form}
-        return render(self.request, 'register.html', context)
+        context = {"form": form}
+        return render(self.request, "register.html", context)
 
     def post(self, request):
         form = RegistrationForm(self.request.POST)
@@ -30,8 +30,8 @@ class RegisterView(View):
 class LoginView(View):
     def get(self, request):
         form = LoginForm()
-        context = {'form': form}
-        return render(self.request, 'login.html', context)
+        context = {"form": form}
+        return render(self.request, "login.html", context)
 
     def post(self, request):
         form = LoginForm(self.request.POST)

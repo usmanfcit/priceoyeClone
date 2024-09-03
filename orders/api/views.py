@@ -5,6 +5,7 @@ from orders.api.serializers import OrderSerializer, OrderItemSerializer, Support
 from orders.models import OrderItem, Order, SupportTicket
 from orders.status_choices import OrderStatusChoices
 from .permissions import IsOwner, IsOrderOwner
+from products.api.permissions import IsStaff
 
 
 class OrderCreationAPIView(generics.CreateAPIView):
@@ -34,7 +35,7 @@ class OrderDeletionAPIView(generics.DestroyAPIView):
 class OrderUpdateAPIView(generics.UpdateAPIView):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
-    permission_classes = (IsOrderOwner,)
+    permission_classes = (IsStaff,)
 
 
 class OrderListingAPIView(generics.ListAPIView):
