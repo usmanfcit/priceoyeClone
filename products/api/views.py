@@ -25,7 +25,7 @@ class VendorReviewListingAPIView(generics.ListAPIView):
         return Review.objects.get_active_reviews_for_model(Vendor, self.kwargs["object_id"])
 
 
-class VendorProductListingAPIView(generics.ListAPIView):
+class ProductListingAPIView(generics.ListAPIView):
     permission_classes = (AllowAny,)
     serializer_class = ProductSerializer
     filter_backends = [DjangoFilterBackend]
