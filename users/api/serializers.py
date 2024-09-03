@@ -1,32 +1,11 @@
 from datetime import datetime, timezone
 
+from django.contrib.contenttypes.models import ContentType
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-from users.models import User, Role, UserProductReaction, UserProductReview
-from products.models import Product, Category, Vendor
+from users.models import User, Role, UserProductReaction, Review
 from .email import EmailService
-
-
-class CategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Category
-        fields = '__all__'
-
-
-class VendorSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Vendor
-        fields = '__all__'
-
-
-class ProductSerializer(serializers.ModelSerializer):
-    category = CategorySerializer()
-    vendor = VendorSerializer()
-
-    class Meta:
-        model = Product
-        fields = "__all__"
 
 
 class RoleSerializer(serializers.ModelSerializer):
@@ -82,41 +61,45 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
 
 
-class UserProductReactionSerializer(serializers.Serializer):
-    product_id = serializers.IntegerField()
-
-
 class UserProductReactionSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
     class Meta:
         model = UserProductReaction
-        fields = ("product",)
+        fields = ("product", "reaction", "user")
 
     def create(self, data):
-        product = data["product"]
-        user = self.context["request"].user
-        reaction = self.context["request"].parser_context["kwargs"]["action"]
         user_product_reaction, created = UserProductReaction.objects.update_or_create(
-            user=user,
-            product=product,
-            defaults={"reaction": reaction}
+            user=self.context["request"].user,
+            product=data["product"],
+            defaults={"reaction": data["reaction"]}
         )
         return user_product_reaction
 
 
-class UserProductReviewSerializer(serializers.ModelSerializer):
+class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UserProductReview
-        fields = ("product", "review", "rating")
+        model = Review
+        fields = ("content_type", "object_id", "description", "rating")
 
     def create(self, data):
-        product = data["product"]
-        review = data["review"]
+        object_id = data["object_id"]
+        content_type_id = data["content_type"].id
+        description = data["description"]
         rating = data["rating"]
         user = self.context["request"].user
 
-        user_product_review, created = UserProductReview.objects.update_or_create(
+        content_type = ContentType.objects.get(pk=content_type_id)
+        model_class = content_type.model_class()
+        obj = model_class.objects.get(pk=object_id)
+        object_name = obj.name
+
+        review = Review.objects.create(
+            content_type=content_type,
+            object_id=object_id,
+            object_name=object_name,
             user=user,
-            product=product,
-            defaults={"review": review, "rating": rating}
+            description=description,
+            rating=rating
         )
-        return user_product_review
+        return review

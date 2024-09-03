@@ -33,3 +33,4 @@ class CategoryManager(models.Manager):
 
     def by_status(self, status):
         return self.filter(status=status)
+

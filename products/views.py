@@ -1,8 +1,7 @@
-from django.views.generic.list import ListView
-from django.shortcuts import render, get_object_or_404
 from django.db.models.functions import Lower
+from django.shortcuts import get_object_or_404
 from django.views.generic import DetailView
-from django_extensions.db.models import ActivatorModel
+from django.views.generic.list import ListView
 
 from .models import Product, Category, Vendor, ProductSpecificationCategory
 

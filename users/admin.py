@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DefaultUserAdmin
 
-from .models import User, Role, UserProductReaction, UserProductReview
+from .models import User, Role, UserProductReaction, Review
 
 
 @admin.register(User)
@@ -13,7 +13,6 @@ class UserAdmin(DefaultUserAdmin):
         ("Personal info", {"fields": ("first_name", "last_name", "phone_number", "role")}),
         ("Permissions", {"fields": ("is_active", "is_staff", "is_superuser", "groups", "user_permissions")}),
         ("Important dates", {"fields": ("last_login",)}),
-        # ("Product Likings", {"fields": ("liked_products", "disliked_products",)})
     )
     add_fieldsets = (
         (None, {
@@ -26,4 +25,4 @@ class UserAdmin(DefaultUserAdmin):
 
 admin.site.register(Role)
 admin.site.register(UserProductReaction)
-admin.site.register(UserProductReview)
+admin.site.register(Review)

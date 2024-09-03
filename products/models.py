@@ -73,7 +73,8 @@ class Product(TimeStampedModel, ActivatorModel):
     category = models.ForeignKey(
         Category,
         on_delete=models.SET_NULL,
-        null=True)
+        null=True
+    )
     vendor = models.ForeignKey(Vendor, on_delete=models.SET_NULL, null=True)
 
     objects = ProductManager()
