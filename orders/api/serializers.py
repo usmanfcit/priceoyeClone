@@ -39,10 +39,10 @@ class OrderSerializer(serializers.ModelSerializer):
         model = Order
         fields = ("id", "order_status", "items", "user")
 
-    def create(self, validated_data):
-        if validated_data["user"] != self.context["request"].user:
-            raise ValidationError({"user": "You are not allowed to set the user field manually."})
-        return super().create(validated_data)
+    def validate(self, attrs):
+        if attrs["user"] != self.context["request"].user:
+            raise ValidationError({"ValidationError": "You are not allowed to set the user field manually."})
+        return super().validate(attrs)
 
 
 class SupportTicketSerializer(serializers.ModelSerializer):
@@ -50,4 +50,4 @@ class SupportTicketSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SupportTicket
-        fields = '__all__'
+        fields = "__all__"
