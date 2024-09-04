@@ -1,3 +1,4 @@
+import os
 from datetime import timedelta
 
 from decouple import config
@@ -12,6 +13,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 sentry_sdk.init(
     dsn="https://3dc1a4af0514027fced17a53dfed4c14@o4507809417723904.ingest.de.sentry.io/4507809426899024",

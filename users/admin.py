@@ -13,6 +13,7 @@ class UserAdmin(DefaultUserAdmin):
         ("Personal info", {"fields": ("first_name", "last_name", "phone_number", "role")}),
         ("Permissions", {"fields": ("is_active", "is_staff", "is_superuser", "groups", "user_permissions")}),
         ("Important dates", {"fields": ("last_login",)}),
+        ("Profile Picture", {"fields": ("profile_picture",)})
     )
     add_fieldsets = (
         (None, {
