@@ -1,9 +1,12 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 
 from orders.api.serializers import OrderSerializer, OrderItemSerializer, SupportTicketSerializer
 from orders.models import OrderItem, Order, SupportTicket
 from orders.status_choices import OrderStatusChoices
+from products.api.permissions import IsStaff
+from .filters import OrderFilter
 from .permissions import IsOwner, IsOrderOwner
 
 
@@ -34,7 +37,16 @@ class OrderDeletionAPIView(generics.DestroyAPIView):
 class OrderUpdateAPIView(generics.UpdateAPIView):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
-    permission_classes = (IsOrderOwner,)
+    permission_classes = (IsStaff,)
+
+
+class OrderListingByStatusAPIView(generics.ListAPIView):
+    queryset = Order.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = OrderFilter
+    serializer_class = OrderSerializer
+    permission_classes = (IsStaff,)
+
 
 
 class OrderListingAPIView(generics.ListAPIView):
@@ -56,4 +68,3 @@ class SupportTicketUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return SupportTicket.objects.filter(user=self.request.user)
-

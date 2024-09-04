@@ -26,7 +26,7 @@ class Vendor(TimeStampedModel, ActivatorModel):
 
 
 class SpecificationCategory(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100)
 
     class Meta:
         verbose_name_plural = "Specification Categories"

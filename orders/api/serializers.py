@@ -37,11 +37,11 @@ class OrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ("id", "order_status", "items", "user")
+        fields = ("id", "order_status", "items", "user", "created")
 
     def validate(self, attrs):
-        if attrs["user"] != self.context["request"].user:
-            raise ValidationError({"ValidationError": "You are not allowed to set the user field manually."})
+        if not self.context["request"].user.is_staff:
+            raise ValidationError({"ValidationError": "You are not allowed to do this operation."})
         return super().validate(attrs)
 
 
