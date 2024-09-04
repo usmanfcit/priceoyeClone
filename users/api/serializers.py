@@ -5,7 +5,7 @@ from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from users.models import User, Role, UserProductReaction, Review
-from .email import EmailService
+from .tasks import send_registration_email
 
 
 class RoleSerializer(serializers.ModelSerializer):
@@ -56,8 +56,8 @@ class RegisterSerializer(serializers.ModelSerializer):
         user = super().create(data)
         user.set_password(data["password"])
         user.save()
-        email_service = EmailService()
-        email_service.send_registration_email(user)
+        user_email = user.email
+        send_registration_email.delay(user_email)
         return user
 
 
