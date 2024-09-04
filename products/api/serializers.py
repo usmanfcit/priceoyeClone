@@ -71,27 +71,42 @@ class AddProductSerializer(serializers.ModelSerializer):
         price = validated_data["price"]
         specification_categories = validated_data["specification_categories"]
 
-        product = Product.objects.create(
+        product, created = Product.objects.get_or_create(
             name=name,
             price=price,
             image_url=image_url,
             category=category,
             vendor=vendor,
         )
+
+        specification_categories_list = []
+        product_specification_categories_list = []
+        specification_details_list = []
         for specification_category_detail in specification_categories:
             category_name = specification_category_detail["specification_category"]
             category_name = category_name["name"]
-            specification_category, created = SpecificationCategory.objects.get_or_create(name=category_name)
-            product_specification_category, created = ProductSpecificationCategory.objects.get_or_create(
+
+            specification_category = SpecificationCategory(name=category_name)
+            specification_categories_list.append(specification_category)
+
+            product_specification_category = ProductSpecificationCategory(
                 specification_category=specification_category,
                 product=product
             )
+            product_specification_categories_list.append(product_specification_category)
+
             for specification_details in specification_category_detail["details"]:
                 specification_label = specification_details["specification_label"]
                 specification_value = specification_details["specification_value"]
-                SpecificationDetail.objects.get_or_create(
+                specification_detail = SpecificationDetail(
                     specification_category=product_specification_category,
                     specification_label=specification_label,
                     specification_value=specification_value
                 )
+                specification_details_list.append(specification_detail)
+
+        SpecificationCategory.objects.bulk_create(specification_categories_list)
+        ProductSpecificationCategory.objects.bulk_create(product_specification_categories_list)
+        SpecificationDetail.objects.bulk_create(specification_details_list)
+
         return product
