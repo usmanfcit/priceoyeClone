@@ -37,7 +37,7 @@ class OrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ("id", "order_status", "items", "user")
+        fields = ("id", "order_status", "items", "user", "created")
 
     def validate(self, attrs):
         if not self.context["request"].user.is_staff:

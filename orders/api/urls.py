@@ -10,4 +10,5 @@ urlpatterns = [
     path("list/", views.OrderListingAPIView.as_view()),
     path("supportticket/list-or-create/", views.SupportTicketListCreateAPIView.as_view()),
     path("supportticket/update-or-delete/<int:pk>/", views.SupportTicketUpdateDestroyAPIView.as_view()),
+    path("filtered-listing/", views.OrderListingByStatusAPIView.as_view())
     ]
