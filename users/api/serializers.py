@@ -50,11 +50,14 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ("first_name", "last_name", "password", "email", "phone_number")
+        fields = ("first_name", "last_name", "password", "email", "phone_number", "profile_picture")
 
     def create(self, data):
         user = super().create(data)
+        profile_picture = data.pop("profile_picture", None)
         user.set_password(data["password"])
+        if profile_picture:
+            user.profile_picture = profile_picture
         user.save()
         user_email = user.email
         send_registration_email.delay(user_email)
